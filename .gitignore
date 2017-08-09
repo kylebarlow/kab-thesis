@@ -1,10 +1,7 @@
-*.aux
-*.log
-
-main.toc
-main.lof
-main.lot
-main.synctex.gz
-main.pdf
-
-titlePageExport.pdf
+flex-ddG.aux
+flex-ddG.bbl
+flex-ddG.blg
+flex-ddG.dvi
+flex-ddG.log
+acs-flex-ddG.bib
+flex-ddG.pdf
