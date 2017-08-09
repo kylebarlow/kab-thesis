@@ -6,10 +6,10 @@
 \usepackage{afterpage}
 
 % this is where to put figures you're including (I just made PNGs of everything)
-\graphicspath{ {figures/} }
+% \graphicspath{ {figures/} }
 
 \usepackage[utf8]{inputenc}
-\usepackage[greek,ngerman,english]{babel}
+% \usepackage[greek,ngerman,english]{babel}
 
 \usepackage[space]{grffile}
 \usepackage{latexsym}
@@ -30,6 +30,9 @@
 \usepackage[hyperfigures,breaklinks,pagebackref,hidelinks]{hyperref}
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \usepackage[nameinlink]{cleveref}
+
+% custom commands
+\newcommand\ddg{$\Delta\Delta G$}
 
 % code to remove things from ToC (from https://tex.stackexchange.com/questions/272070/)
 \newcommand*{\BeginNoToc}{%
@@ -57,8 +60,8 @@
 % (or eventually the signed scanned version)
 \includepdf{titlePageExport.pdf}
 \afterpage{\thispagestyle{plain}\null\newpage}
-\include{./TeX_files/acknowledgments}
-\include{./TeX_files/abstract}
+\include{./chapters/acknowledgments}
+\include{./chapters/abstract}
 \tableofcontents
 \BeginNoToc
 \listoftables
@@ -66,22 +69,23 @@
 \EndNoToc
 
 \mainmatter
-\include{./TeX_files/introduction}
-\include{./TeX_files/chapter02}
-\include{./TeX_files/chapter03}
-\include{./TeX_files/chapter04}
-\include{./TeX_files/chapter05}
-\include{./TeX_files/chapter06}
-\include{./TeX_files/chapter07}
+\include{./chapters/introduction}
+\include{./chapters/benchmark-paper}
+% \include{./chapters/chapter02}
+% \include{./chapters/chapter03}
+% \include{./chapters/chapter04}
+% \include{./chapters/chapter05}
+% \include{./chapters/chapter06}
+% \include{./chapters/chapter07}
 
 \backmatter
 % bibliography, glossary and index would go here.
 
 % I named my biblatex file "biblio.bib". You're on your own with this crap.
-\bibliography{biblio}
+\bibliography{references}
 
 % print this out, add the right page number, sign it/scan it, then include it as pdf
 %\BeginNoToc
-\includepdf{publishing_agreement.pdf}
+% \includepdf{publishing_agreement.pdf}
 %\EndNoToc
 \end{document}

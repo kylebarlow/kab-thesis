@@ -3,7 +3,7 @@ BIB_PROG := biber
 
 # export TEXINPUTS := ~/texmf/achemso:$TEXINPUTS
 
-SOURCES = Makefile *.tex references.bib
+SOURCES = Makefile *.tex references.bib chapters/*.tex
 TEXNAME = main
 
 all: $(TEXNAME).pdf
@@ -13,4 +13,7 @@ $(TEXNAME).pdf: $(TEXNAME).tex $(SOURCES)
 	pdflatex $(TEXNAME)
 	pdflatex $(TEXNAME)
 clean:
-	grep -vE '^(#|$$)' .gitignore | xargs rm -f
+	rm -f *.aux
+	rm -f *.out
+	rm -f *.log
+	rm -f main.pdf
