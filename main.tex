@@ -19,6 +19,7 @@
 \usepackage{amsfonts,amsmath,amssymb}
 \usepackage{setspace}
 \usepackage{caption}
+\usepackage{float}
 \captionsetup[figure]{hypcap=false}
 
 \usepackage[super,comma,sort&compress]{natbib}
@@ -29,7 +30,10 @@
 \PassOptionsToPackage{hyphens}{url}
 \usepackage[hyperfigures,breaklinks,pagebackref,hidelinks]{hyperref}
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
-\usepackage[nameinlink]{cleveref}
+\usepackage[capitalise]{cleveref}
+
+\usepackage{fancyhdr}
+\pagestyle{plain}
 
 % custom commands
 \newcommand\ddg{$\Delta\Delta G$}

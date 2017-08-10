@@ -3,7 +3,7 @@ BIB_PROG := bibtex
 
 # export TEXINPUTS := ~/texmf/achemso:$TEXINPUTS
 
-SOURCES = Makefile *.tex references.bib chapters/*.tex
+SOURCES = Makefile *.tex references.bib chapters/*.tex figures/*
 TEXNAME = main
 
 all: $(TEXNAME).pdf
