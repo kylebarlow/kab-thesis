@@ -19,7 +19,7 @@ with open('benchmark-paper.tex', 'r') as f:
         new_line = line.strip()
         while True:
             m = re.search( '\[(\d+)\]', new_line )
-            mult_m = re.search( u'\[(\d+)[–-](\d+)\]', new_line )
+            mult_m = re.search( u'\[(\d+)[,–-](\d+)\]', new_line )
             if not m and not mult_m:
                 break
             if m:
@@ -27,7 +27,7 @@ with open('benchmark-paper.tex', 'r') as f:
                 new_line = new_line.replace( m.group(0), '\cite{%s}' % refs[ref_num] )
             if mult_m:
                 citations = []
-                for ref_num in range( int(mult_m.group(1)), int(mult_m.group(2)) ):
+                for ref_num in range( int(mult_m.group(1)), int(mult_m.group(2))+1 ):
                     citations.append( refs[ref_num] )
                 new_line = new_line.replace( mult_m.group(0), '\cite{%s}' % ','.join(citations) )
         new_lines.append( new_line )
