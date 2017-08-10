@@ -42,7 +42,7 @@ The purpose of this benchmark is to predict the change in stability (\ddg) of a 
 
 \paragraph{Benchmark dataset}
 
-In previous studies, protein stability prediction methods have been benchmarked against multiple curated datasets: a set of 1030 mutants collected by Guerois et al. \cite{guerois_predicting_2002}; a set of 2156 mutants collected by Potapov et al. \cite{potapov_assessing_2009}; a set of 1210 mutants collected by Kellogg et al. \cite{kellogg_role_2011}; and a set of 582 mutants collected by Benedix et al. \cite{benedix_predicting_2009}. The records in these datasets mainly originate from the ProTherm database \cite{kumar_protherm_2006} - a large, manually curated collection of thermostability data from the literature - and are mostly single point mutations. Our benchmark capture collects the Guerois, Potapov, and Kellogg datasets together and adds a fourth dataset of 2971 point mutants from ProTherm. This last dataset is lightly curated; it contains most of the single point mutations available in ProTherm excepting records where: (i) there is no corresponding structure determined via X-ray crystallography with a resolution of at least 2.5Å; (ii) there are multiple experimental \ddg\ values for an individual mutation that differ by more than 2.5 kcal/mol in the experimental values; or (iii) the mutated protein is a transmembrane protein.
+In previous studies, protein stability prediction methods have been benchmarked against multiple curated datasets: a set of 1030 mutants collected by Guerois et al. \cite{guerois_predicting_2002}; a set of 2156 mutants collected by Potapov et al. \cite{potapov_assessing_2009}; a set of 1210 mutants collected by Kellogg et al. \cite{kellogg_role_2011}; and a set of 582 mutants collected by Benedix et al. \cite{benedix_predicting_2009}. The records in these datasets mainly originate from the ProTherm database \cite{kumar_protherm_2006} - a large, manually curated collection of thermostability data from the literature - and are mostly single point mutations. Our benchmark capture collects the Guerois, Potapov, and Kellogg datasets together and adds a fourth dataset of 2971 point mutants from ProTherm. This last dataset is lightly curated; it contains most of the single point mutations available in ProTherm excepting records where: (i) there is no corresponding structure determined via X-ray crystallography with a resolution of at least 2.5$\AA$; (ii) there are multiple experimental \ddg\ values for an individual mutation that differ by more than 2.5 kcal/mol in the experimental values; or (iii) the mutated protein is a transmembrane protein.
 
 ProTherm contains details of the publications from which the thermodynamic data originated. These explicit references were omitted in the previously published datasets mentioned above but we have determined the source of the mutations for each record in the benchmark capture and reformatted the datasets into a standardized format. This refactoring has allowed us to determine the overlap between the datasets in terms of mutations and experimental assays to a large degree. These refactored datasets are included in the benchmark capture.
 
@@ -83,8 +83,13 @@ The protocol has been benchmarked on a previously published set of the energetic
 We have re-implemented a previously published alanine scanning protocol \cite{kortemme_simple_2002,kortemme_computational_2004} in the current version of Rosetta to determine the current performance of this method. Unlike the generalized \ddg\ protocol described above, which performs side chain optimization and side chain and backbone minimization over the entire protein structure, the alanine scanning protocol does not model perturbation of the backbone or side chains other than the side chain of the residue replaced with alanine.
 The \ddg\ of binding upon mutation to alanine is calculated using the following equation, in which Rosetta total energy is used to estimate the $\Delta G$\ of folding of each of the six terms:
 
-
-
+\begin{equation}\label{eqn:split-ddg}
+  \begin{split}
+    {\Delta\Delta}G_{bind} & ={\Delta}G^{MUT}_{bind} - {\Delta}G^{WT}_{bind}\\
+    & =({\Delta}G^{MUT}_{complex} - {\Delta}G^{MUT}_{partner A} - {\Delta}G^{MUT}_{partner B})\\
+    & \quad - ({\Delta}G^{WT}_{complex} - {\Delta}G^{WT}_{partner A} - {\Delta}G^{WT}_{partner B})\\
+  \end{split}
+\end{equation}
 
 Alanine scanning uses a version of Rosetta’s Talaris energy function with modified weights intended for scoring mutations to alanine within interfaces, where the score term representing repulsive electrostatic interactions is down-weighted.
 
@@ -142,8 +147,12 @@ We found that adding a small degree of backbone flexibility prior to design incr
 Sequence profiles represent the distribution of amino acids at each position in a multiple sequence alignment of a protein family (\cref{fig:benchmark-overview}C). To compare natural and designed sequence profiles, we computed the divergence between the amino acid distributions at corresponding positions in the natural and designed sequences, as described in \cite{yona_within_2002}. Briefly, profile similarity is the product of two scores: (i) the estimated probability that two amino acid distributions represent the same source distribution; and (ii) the a priori probability of the source distribution. It is defined as:
 
 
+\begin{equation}
+  \label{eqn:prof-sim}
+  Profile\;Similarity(p,q) = \frac{1}{2}(1 - {D^{JS}}[p||q])(1 + {D^{JS}}[r||{P_0}])
+\end{equation}
 
-where p and q are amino acid probability distributions at corresponding positions in natural and designed sequences, r is the average of p and q, P0 is the background distribution, and DJS is the Jensen-Shannon divergence. Using this metric, positions in designed sequences receive high profile similarity scores if both: (i) their amino acid distribution is similar to the amino acid distribution at the corresponding position in the natural alignment; and (ii) their amino acid distribution is different than the background amino acid distribution.
+where p and q are amino acid probability distributions at corresponding positions in natural and designed sequences, r is the average of p and q, $P_0$ is the background distribution, and $D^{JS}$ is the Jensen-Shannon divergence. Using this metric, positions in designed sequences receive high profile similarity scores if both: (i) their amino acid distribution is similar to the amino acid distribution at the corresponding position in the natural alignment; and (ii) their amino acid distribution is different than the background amino acid distribution.
 
 \paragraph{Key results}
 
@@ -162,18 +171,28 @@ Barplot showing the percent occurrence of each type of amino acid found at burie
 
 \paragraph{Performance metrics}
 
-To evaluate how well a given protein design method could recapitulate natural amino acid covariation, we designed 500 sequences for each protein domain in the benchmark and calculated the covariation between all pairs of positions in the designed sequences (\cref{fig:benchmark-overview}D). Covariation is calculated based on a mutual-information based metric described in \cite{dickson_identifying_2010}. The mutual information (MI) between each pair of columns in a multiple sequence alignment, i and j, was calculated as the difference between individual entropies (Hi, Hj) and the joint entropy (Hi,j):
+To evaluate how well a given protein design method could recapitulate natural amino acid covariation, we designed 500 sequences for each protein domain in the benchmark and calculated the covariation between all pairs of positions in the designed sequences (\cref{fig:benchmark-overview}D). Covariation is calculated based on a mutual-information based metric described in \cite{dickson_identifying_2010}. The mutual information (MI) between each pair of columns in a multiple sequence alignment, i and j, was calculated as the difference between individual entropies ($H_i$, $H_j$) and the joint entropy ($H_{i,j}$):
 
-
+\begin{equation}
+  \label{eq:mut-info}
+  M{I_{i,j}} = {H_i} + {H_j} - {H_{i,j}}
+\end{equation}
 
 The background mutual information due to random noise and shared ancestry is then subtracted to obtain the product corrected mutual information (MIp) \cite{dunn_mutual_2008}:
 
+\begin{equation}
+  \label{eq:mut-info-p}
+  MI{p_{i,j}} = M{I_{i,j}} - \frac{{{{\overline {MI} }_i} \times {{\overline {MI} }_j}}}{{\overline {MI} }}
+\end{equation}
 
+where $\overline{MI}_j$ is the mean MI of position i with all other positions and $\overline{MI}$ is the overall mean value. Next this value is converted to two Z-scores, one for each column, which are then multiplied together:
 
-where  is the mean MI of position i with all other positions and  is the overall mean value. Next this value is converted to two Z-scores, one for each column, which are then multiplied together:
+\begin{equation}
+  \label{eq:covariation-z-score}
+  {Z_{i \times y}} = \frac{{MI{p_{i,j}} - \overline {MI{p_i}} }}{{\sigma (MI{p_i})}} \times \frac{{MI{p_{i,j}} - \overline {MI{p_j}} }}{{\sigma (MI{p_i})}}
+\end{equation}
 
-
-The final covariation score, called Zpx, is calculated as the square root of the absolute value of . (If  is negative, then Zpx is multiplied by -1.) This normalization was previously shown to reduce sensitivity to potential misaligned regions in multiple sequence alignments, which otherwise result in artificially high MI scores \cite{dickson_identifying_2010}. Similarity between natural and designed covariation was calculated as the percent overlap between the highly covarying pairs in the natural sequences and in the designed sequences. We considered pairs with covariation scores greater than two standard deviations from the mean to be highly covarying \cite{ollikainen_computational_2013}.
+The final covariation score, called Zpx, is calculated as the square root of the absolute value of $Z_{i \times y}$. (If $Z_{i \times y}$ is negative, then Zpx is multiplied by -1.) This normalization was previously shown to reduce sensitivity to potential misaligned regions in multiple sequence alignments, which otherwise result in artificially high MI scores \cite{dickson_identifying_2010}. Similarity between natural and designed covariation was calculated as the percent overlap between the highly covarying pairs in the natural sequences and in the designed sequences. We considered pairs with covariation scores greater than two standard deviations from the mean to be highly covarying \cite{ollikainen_computational_2013}.
 
 \paragraph{Key results}
 
@@ -194,7 +213,21 @@ The experimental data used for comparison in this benchmark set come from phage 
 There are two main computational steps: (i) the Rosetta Backrub application \cite{smith_backrub-like_2008} uses Monte Carlo sampling starting from a single input structure to create an ensemble of near-native conformations; (ii) the sequence tolerance application \cite{smith_predicting_2011,smith_structure-based_2010} then uses a genetic algorithm to sample and score a large number of sequences for each member of the ensemble. An input file defines the sequence positions to be designed, and interactions within and between different parts of the structure can be individually reweighted, depending on the desired objective.
 
 \paragraph{Performance metrics}
-The analysis scripts use Boltzmann weighting to generate a predicted position weight matrix (PWM) for the specified sequence positions. This predicted PWM can be compared to known sequence profiles via these metrics described in the previous sequence tolerance publications \cite{smith_predicting_2011,smith_structure-based_2010}: (i) AAD, average absolute deviation, defined as  and (ii) Frobenius distance, defined as , where E is the vector of experimentally determined amino acid frequencies and P is the corresponding vector of predictions. (iii) AUC, or area under the receiver operator characteristic curve, measures the ability of the predictions to match the experimental values on a known scale, where 0.5 indicates random predictions and 1.0 is perfect. (iv) ``Rank top'' measures the predicted rank of the most frequent experimentally determined amino acid.
+The analysis scripts use Boltzmann weighting to generate a predicted position weight matrix (PWM) for the specified sequence positions. This predicted PWM can be compared to known sequence profiles via these metrics described in the previous sequence tolerance publications \cite{smith_predicting_2011,smith_structure-based_2010}: (i) AAD, average absolute deviation, defined as:
+
+\begin{equation}
+  \label{eq:bmark-aad}
+  \frac{1}{N}\sum\limits_{i = 1}^N | {E_i} - {P_i}|
+\end{equation}
+
+and (ii) Frobenius distance, defined as:
+
+\begin{equation}
+  \label{eq:bmark-frob-dist}
+  \sqrt {\sum\limits_{i = 1}^N {{{({E_i} - {P_i})}^2}} }
+\end{equation}
+
+where E is the vector of experimentally determined amino acid frequencies and P is the corresponding vector of predictions. (iii) AUC, or area under the receiver operator characteristic curve, measures the ability of the predictions to match the experimental values on a known scale, where 0.5 indicates random predictions and 1.0 is perfect. (iv) ``Rank top'' measures the predicted rank of the most frequent experimentally determined amino acid.
 
 \paragraph{Key results}
 Recognition specificity performance with Talaris is comparable to the originally published performance of the protocol with Score12 \cite{smith_predicting_2011,smith_structure-based_2010}.
