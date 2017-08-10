@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-BIB_PROG := biber
+BIB_PROG := bibtex
 
 # export TEXINPUTS := ~/texmf/achemso:$TEXINPUTS
 
