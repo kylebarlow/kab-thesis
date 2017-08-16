@@ -5,6 +5,7 @@
 \usepackage{pdfpages}
 \usepackage{afterpage}
 \usepackage{wrapfig}
+\usepackage{epigraph}
 
 % this is where to put figures you're including (I just made PNGs of everything)
 % \graphicspath{ {figures/} }
@@ -56,6 +57,7 @@
 }
 
 \bibliographystyle{unsrtnat}
+% \bibliographystyle{abbrvnat}
 \doublespacing
 
 \begin{document}
@@ -76,9 +78,10 @@
 
 \mainmatter
 \include{./chapters/introduction}
-\include{./chapters/biosensor}
+% \include{./chapters/biosensor}
 \include{./chapters/benchmark-paper}
 \include{./chapters/flex-ddG}
+\include{./chapters/conclusion}
 
 \backmatter
 % bibliography, glossary and index would go here.
@@ -87,7 +90,7 @@
 \bibliography{references}
 
 % print this out, add the right page number, sign it/scan it, then include it as pdf
-%\BeginNoToc
-% \includepdf{publishing_agreement.pdf}
-%\EndNoToc
+% \BeginNoToc
+\includepdf[pagecommand={\thispagestyle{plain}}]{UCSF_Library_Publishing_Agreement_Page_0.pdf}
+% \EndNoToc
 \end{document}
