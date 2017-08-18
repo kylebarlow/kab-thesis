@@ -23,6 +23,14 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{import}
+\usepackage{csvsimple}
+
+\usepackage{minted}
+% Next two lines add chapter number to listings
+\usepackage{chngcntr}
+\AtBeginDocument{\counterwithin{listing}{chapter}}
+\renewcommand\listoflistingscaption{List of source code listings}
+
 \captionsetup[figure]{hypcap=false}
 
 \usepackage[super,comma,sort&compress]{natbib}
@@ -74,6 +82,7 @@
 \BeginNoToc
 \listoftables
 \listoffigures
+\listoflistings
 \EndNoToc
 
 \mainmatter
@@ -82,6 +91,7 @@
 \include{./chapters/benchmark-paper}
 \include{./chapters/flex-ddG}
 \include{./chapters/conclusion}
+\include{./appendix}
 
 \backmatter
 % bibliography, glossary and index would go here.

@@ -8,10 +8,10 @@ TEXNAME = main
 
 all: $(TEXNAME).pdf
 $(TEXNAME).pdf: $(TEXNAME).tex $(SOURCES)
-	pdflatex $(TEXNAME)
+	pdflatex --shell-escape $(TEXNAME)
 	-$(BIB_PROG) $(TEXNAME)
-	pdflatex $(TEXNAME)
-	pdflatex $(TEXNAME)
+	pdflatex --shell-escape $(TEXNAME)
+	pdflatex --shell-escape $(TEXNAME)
 clean:
 	rm -f *.aux
 	rm -f *.out

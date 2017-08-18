@@ -13,3 +13,7 @@ main.lot
 main.toc
 main.brf
 figures/*converted-to.pdf
+_minted-main/
+appendix.aux
+appendix.tex
+main.lol
