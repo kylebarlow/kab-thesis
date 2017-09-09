@@ -17,7 +17,23 @@
 {%
   \newcounter{chapter@last@#1}
   \AtBeginEnvironment
-  {#2}
+  {figure}
+  {
+    \ifnumequal%
+    {\value{chapter}}%
+    {\value{chapter@last@#1}}%
+    {}%  already added
+    {%
+      \addtocontents{#1}{\protect\numberline{\vspace{\BeforeChapterInIndex}}}%
+      \addtocontents%
+      {#1}%
+      {\protect\numberline{\ChapterInIndex{\thechapter}{\thechaptername}}}%
+      \setcounter{chapter@last@#1}{\value{chapter}}%
+      \addtocontents{#1}{\protect\numberline{\vspace{\AfterChapterInIndex}}}%
+    }
+  }
+  \AtBeginEnvironment
+  {wrapfigure}
   {
     \ifnumequal%
     {\value{chapter}}%
